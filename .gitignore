@@ -1,0 +1,5 @@
+pinecone-ingestor-env
+documentos_ingest
+lixo
+__pycache__
+.env
