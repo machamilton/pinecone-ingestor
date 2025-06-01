@@ -14,31 +14,18 @@ def PineconeIndexClient(api_key, environment, index_name):
     # Retorna o cliente do índice
     return pc.Index(index_name)
 
-def IngestEmbeddingsToPinecone(
-    index,
-    embeddings,
-    namespace
-):
-    """
-    Insere os embeddings no índice Pinecone.
-    Cada item precisa de um ID único.
-    """
-    vectors = []
-    for item in embeddings:
-        vector_id = str(uuid.uuid4())
-        vector_data = {
-            "id": vector_id,
-            "values": item["embedding"],
-            "metadata": {
-                "text": item["text"]
-            }
-        }
-        vectors.append(vector_data)
+def chunked(lst, n):
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
 
-    # Pinecone espera uma lista de tuplas (id, vector, metadata)
-    index.upsert(
-        vectors=[
-            (v["id"], v["values"], v["metadata"]) for v in vectors
-        ],
-        namespace=namespace
-    )
+def IngestEmbeddingsToPinecone(index, embeddings, namespace, batch_size=100):
+    for batch_num, batch in enumerate(chunked(embeddings, batch_size)):
+        records = [
+            {
+                "id": f"{namespace}_doc_{batch_num}_{i}",
+                "values": emb
+            }
+            for i, emb in enumerate(batch)
+        ]
+        index.upsert_records(namespace, records)
+        print(f"[Pinecone] Batch {batch_num + 1} uploaded with {len(batch)} vectors.")

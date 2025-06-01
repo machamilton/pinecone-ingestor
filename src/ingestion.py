@@ -5,11 +5,12 @@ from pinecone_utils import PineconeIndexClient, IngestEmbeddingsToPinecone
 import os
 from dotenv import load_dotenv
 
+
 if __name__ == "__main__":
     # Carrega variáveis de ambiente
     load_dotenv()
     PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-    PINECONE_ENVIRONMENT = os.getenv("PINECONE_ENVIRONMENT")
+    PINECONE_ENVIRONMENT = os.getenv("PINECONE_ENVIRONMENT_REGION")
     PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     PDF_PATH = os.getenv("PDF_PATH")
