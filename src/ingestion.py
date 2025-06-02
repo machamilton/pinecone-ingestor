@@ -33,11 +33,12 @@ if __name__ == "__main__":
     # 4. Gerar embeddings com OpenAI
     print("Gerando embeddings...")
     client = OpenAIEmbeddingClient(OPENAI_API_KEY)
-    embeddings = GenerateEmbeddings(chunks, client)
+    embeddings = GenerateEmbeddings(client, ([d["text"] for d in chunks]))
+    
 
     # 5. Ingestão no Pinecone
     print("Enviando para Pinecone...")
     index = PineconeIndexClient(PINECONE_API_KEY, PINECONE_ENVIRONMENT, PINECONE_INDEX_NAME)
-    IngestEmbeddingsToPinecone(index, embeddings, PINECONE_NAMESPACE)
+    IngestEmbeddingsToPinecone(chunks, embeddings, index, PINECONE_NAMESPACE)
 
     print("Pipeline finalizado com sucesso!")

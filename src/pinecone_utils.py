@@ -1,5 +1,6 @@
-import uuid
+#import uuid
 from pinecone import Pinecone
+from openai_utils import GenerateEmbeddings, OpenAIEmbeddingClient
 
 def PineconeIndexClient(api_key, environment, index_name):
     if not all([api_key, environment, index_name]):
@@ -14,18 +15,22 @@ def PineconeIndexClient(api_key, environment, index_name):
     # Retorna o cliente do índice
     return pc.Index(index_name)
 
-def chunked(lst, n):
-    for i in range(0, len(lst), n):
-        yield lst[i:i + n]
+def IngestEmbeddingsToPinecone(data, doc_embeds, index, namespace):
+#    vectors = []
+    for d, e in zip(data, doc_embeds):
+        '''
+        vectors.append({
+            "id": d['id'],
+            "values": e,
+            "metadata": {'text': d['text']}
+        })
+        '''
 
-def IngestEmbeddingsToPinecone(index, embeddings, namespace, batch_size=100):
-    for batch_num, batch in enumerate(chunked(embeddings, batch_size)):
-        records = [
-            {
-                "id": f"{namespace}_doc_{batch_num}_{i}",
-                "values": emb
-            }
-            for i, emb in enumerate(batch)
-        ]
-        index.upsert_records(namespace, records)
-        print(f"[Pinecone] Batch {batch_num + 1} uploaded with {len(batch)} vectors.")
+        index.upsert(
+            vectors=[{
+            "id": d['id'],
+            "values": e,
+            "metadata": {'text': d['text']}
+            }],
+            namespace=namespace
+        )

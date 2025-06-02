@@ -1,5 +1,6 @@
 import re
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+import uuid
 
 def ConvertToMarkdown(documents):
     """
@@ -52,5 +53,10 @@ def SplitDocuments(markdown_documents, chunk_size=500, chunk_overlap=100):
     chunks = []
     for text in markdown_documents:
         splits = splitter.split_text(text)
-        chunks.extend(splits)
+        for split in splits:
+            dic_return = {}
+            dic_return["id"] = str(uuid.uuid4())
+            dic_return["text"] = split
+            chunks.append(dic_return)
+        
     return chunks
