@@ -16,16 +16,7 @@ def PineconeIndexClient(api_key, environment, index_name):
     return pc.Index(index_name)
 
 def IngestEmbeddingsToPinecone(data, doc_embeds, index, namespace):
-#    vectors = []
     for d, e in zip(data, doc_embeds):
-        '''
-        vectors.append({
-            "id": d['id'],
-            "values": e,
-            "metadata": {'text': d['text']}
-        })
-        '''
-
         index.upsert(
             vectors=[{
             "id": d['id'],

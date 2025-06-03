@@ -31,14 +31,18 @@ if __name__ == "__main__":
     chunks = SplitDocuments(markdown_documents)
 
     # 4. Gerar embeddings com OpenAI
-    print("Gerando embeddings...")
-    client = OpenAIEmbeddingClient(OPENAI_API_KEY)
-    embeddings = GenerateEmbeddings(client, ([d["text"] for d in chunks]))
-    
+    print("Conectando ao OpenAI...")
+    client = OpenAIEmbeddingClient(OPENAI_API_KEY)  
 
     # 5. Ingestão no Pinecone
-    print("Enviando para Pinecone...")
+    print("Gerando embeddings e enviando para Pinecone...")
     index = PineconeIndexClient(PINECONE_API_KEY, PINECONE_ENVIRONMENT, PINECONE_INDEX_NAME)
-    IngestEmbeddingsToPinecone(chunks, embeddings, index, PINECONE_NAMESPACE)
+    total_chunks = len(chunks)
+    for i, chunk in enumerate(chunks, start=1):
+        text = chunk["text"]
+        print("Gerando embedding para o chunk ")
+        embedding = GenerateEmbeddings(client, [text])
+        IngestEmbeddingsToPinecone([chunk], embedding, index, PINECONE_NAMESPACE)
+        print(f"Chunk {i} de {total_chunks} ingerido")
 
     print("Pipeline finalizado com sucesso!")

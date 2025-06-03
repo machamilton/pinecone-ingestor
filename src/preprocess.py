@@ -41,7 +41,6 @@ def ConvertToMarkdown(documents):
 
     return markdown_docs
 
-
 def SplitDocuments(markdown_documents, chunk_size=500, chunk_overlap=100):
     """
     Divide os textos Markdown em chunks com sobreposição, prontos para embeddings.
