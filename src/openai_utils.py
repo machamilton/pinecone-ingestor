@@ -13,14 +13,16 @@ def OpenAIEmbeddingClient(api_key):
     return client
 
 
-def GenerateEmbeddings(client, docs: list[str]) -> list[list[float]]:
+def GenerateEmbeddings(client, embedding_model, docs: list[str]) -> list[list[float]]:
     res = client.embeddings.create(
         input=docs,
-        model="text-embedding-3-large"
+        model=embedding_model
     )
     doc_embeds = [r.embedding for r in res.data] 
     return doc_embeds 
 
+
+'''
 def LegacyGenerateEmbeddings(text_chunks: List[str], client, model: str = "text-embedding-3-small"):
     """
     Gera embeddings para uma lista de textos usando o modelo da OpenAI.
@@ -37,3 +39,4 @@ def LegacyGenerateEmbeddings(text_chunks: List[str], client, model: str = "text-
             "embedding": vector
         })
     return embeddings
+'''

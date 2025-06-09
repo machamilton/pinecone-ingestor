@@ -15,6 +15,7 @@ if __name__ == "__main__":
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     PDF_PATH = os.getenv("PDF_PATH")
     PINECONE_NAMESPACE = os.getenv("PINECONE_NAMESPACE")
+    OPENAI_EMBEDDING_MODEL=os.getenv("OPENAI_EMBEDDING_MODEL")
 
     print("🚀 Iniciando o pipeline de ingestão...")
 
@@ -40,8 +41,7 @@ if __name__ == "__main__":
     total_chunks = len(chunks)
     for i, chunk in enumerate(chunks, start=1):
         text = chunk["text"]
-        print("Gerando embedding para o chunk ")
-        embedding = GenerateEmbeddings(client, [text])
+        embedding = GenerateEmbeddings(client,OPENAI_EMBEDDING_MODEL, [text])
         IngestEmbeddingsToPinecone([chunk], embedding, index, PINECONE_NAMESPACE)
         print(f"Chunk {i} de {total_chunks} ingerido")
 
