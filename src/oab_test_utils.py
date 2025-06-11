@@ -30,3 +30,29 @@ def OABTestFormatter(raw_test):
         formatted_questions.append(dict_questions)
 
     return formatted_questions
+
+def OABAnswersFormatter(texto_bruto):
+    lines = "\n".join(texto_bruto).splitlines()
+
+    capturing = False
+    list_answers = []
+    question_number = 1
+
+    for line in lines:
+        if "TIPO 1" in line:
+            capturing = True
+            continue
+        if capturing:
+            if "TIPO 2" in line:
+                break
+            if line.startswith("##"):
+                # Remove "##" e divide a linha por espaço
+                answers = line.replace("##", "").strip().split()
+                for answer in answers:
+                    list_answers.append({
+                        "pergunta": question_number,
+                        "resposta": answer.lower()
+                    })
+                    question_number += 1
+
+    return list_answers
