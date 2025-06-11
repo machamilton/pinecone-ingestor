@@ -56,3 +56,22 @@ def OABAnswersFormatter(texto_bruto):
                     question_number += 1
 
     return list_answers
+
+def OABQuestionAnswerFormatter(questions, answers):
+    question_num = 0
+    question_answer = []
+    while question_num < 79:
+        correct_answer = answers[question_num]['resposta']
+        # Remove perguntas mal formatadas ou anuladas
+        if correct_answer == '*':
+            question_num += 1
+            continue
+        if len(questions[question_num]) < 5:
+            question_num += 1
+            continue 
+        question = questions[question_num]['pergunta']
+        answer_text = questions[question_num][correct_answer]
+        question_answer.append({"pergunta" : question, "resposta": answer_text})
+        question_num += 1
+
+    return question_answer
