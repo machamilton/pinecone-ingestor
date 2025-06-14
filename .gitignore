@@ -3,3 +3,4 @@ documentos_ingest
 lixo
 __pycache__
 .env
+mongo-server-key.pem
